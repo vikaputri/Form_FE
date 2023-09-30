@@ -23,8 +23,8 @@ const Home = () => {
 
   const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
-	const [identity_number, setIdentityNumber] = useState([]);
-  const [date_of_birth, setDateOfBirth] = useState([]);
+	const [identity_number, setIdentityNumber] = useState('');
+  const [date_of_birth, setDateOfBirth] = useState('');
   
   const onSubmit = async (e) => {
     e.preventDefault()
