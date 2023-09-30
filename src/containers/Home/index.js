@@ -25,6 +25,12 @@ const Home = () => {
 	const [email, setEmail] = useState('');
 	const [identity_number, setIdentityNumber] = useState('');
   const [date_of_birth, setDateOfBirth] = useState('');
+
+  const handleChange = (e) => {
+  };
+
+  const handleSubmit = (e) => {
+  };
   
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -198,35 +204,61 @@ const Home = () => {
                         <Modal.Title>Update Data</Modal.Title>  
                       </Modal.Header>  
                       <Modal.Body> 
-                        <div className="mb-3 row">
-                          <label for="name" class="col-sm-4 col-form-label">Name</label>
-                          <div class="col-sm-8">
-                            <input className="form-control" type="text" name="name"/>
+                        <form onSubmit={handleSubmit}>
+                          <div className="mb-3 row">
+                            <label className="col-sm-4 col-form-label">Name</label>
+                            <div className="col-sm-8">
+                              <input
+                                className="form-control" 
+                                type="text"
+                                name="name"
+                                value={data.name}
+                                onChange={handleChange}
+                              />
+                            </div>
+                          </div> 
+                          <div className="mb-3 row">
+                            <label className="col-sm-4 col-form-label">Identity Number</label>
+                            <div className="col-sm-8">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="identity_number"
+                                value={data.identification_number}
+                                onChange={handleChange}
+                              />
+                            </div>
+                          </div> 
+                          <div className="mb-3 row">
+                            <label className="col-sm-4 col-form-label">Email</label>
+                            <div className="col-sm-8">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="email"
+                                value={data.email}
+                                onChange={handleChange}
+                              />
+                            </div>
                           </div>
-                        </div> 
-                        <div className="mb-3 row">
-                          <label for="identity_number" class="col-sm-4 col-form-label">Identity Number</label>
-                          <div class="col-sm-8">
-                            <input className="form-control" type="text" name="identity_number"/>
+                          <div className="mb-3 row">
+                            <label className="col-sm-4 col-form-label">Date of Birth</label>
+                            <div className="col-sm-8">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="date_of_birth"
+                                value={data.date_of_birth}
+                                onChange={handleChange}
+                              />
+                            </div>
                           </div>
-                        </div> 
-                        <div className="mb-3 row">
-                          <label for="email" class="col-sm-4 col-form-label">Email</label>
-                          <div class="col-sm-8">
-                            <input className="form-control" type="text" name="email"/>
-                          </div>
-                        </div>
-                        <div className="mb-3 row">
-                          <label for="date_of_birth" class="col-sm-4 col-form-label">Date of Birth</label>
-                          <div class="col-sm-8">
-                            <input className="form-control" type="text" name="date_of_birth"/>
-                          </div>
-                        </div>
+                          <Modal.Footer>
+                            <button type="submit" className="btn btn-primary">Update</button>
+                            <Button variant="danger" onClick={modalClose1}>Close</Button>  
+                          </Modal.Footer> 
+                        </form>
                       </Modal.Body>  
-                      <Modal.Footer>
-                        <Button variant="success">Update</Button> 
-                        <Button variant="secondary" onClick={modalClose1}>Close</Button>  
-                      </Modal.Footer>  
                     </Modal> 
 
                     <button style={{marginLeft: "10px"}} className="btn btn-danger" onClick={modalDelete}>Delete</button>
