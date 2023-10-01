@@ -3,18 +3,15 @@ import axios from 'axios';
 import {Modal, Button} from 'react-bootstrap'; 
 
 const Home = () => {
-  const [show, setShow] = useState(false);  
-  const [show1, setShow1] = useState(false);  
+  const [show, setShow] = useState(false);   
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);   
 
   const modalClose = () => setShow(false); 
-  const modalClose1 = () => setShow1(false);  
   const modalClose2 = () => setShow2(false);
   const modalClose3 = () => setShow3(false);   
 
-  const modalView = () => setShow(true); 
-  const modalUpdate = () => setShow1(true); 
+  const modalView = () => setShow(true);  
   const modalDelete= () => setShow2(true);
   const modalAdd= () => setShow3(true);
   
@@ -25,12 +22,6 @@ const Home = () => {
 	const [email, setEmail] = useState('');
 	const [identity_number, setIdentityNumber] = useState('');
   const [date_of_birth, setDateOfBirth] = useState('');
-
-  const handleChange = (e) => {
-  };
-
-  const handleSubmit = (e) => {
-  };
   
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -40,7 +31,7 @@ const Home = () => {
       setShow3(false)
       window.location.reload(false);
     } catch (e) {
-      alert('Gagal Menyimpan Data')
+      alert('Gagal Menyimpan Data. Name, email, atau identification number sudah ada')
     }
   }
 
@@ -93,7 +84,9 @@ const Home = () => {
                     className="form-control" 
                     type="text"
                     name="name"
+                    required
                     value={name}
+                    placeholder="Name"
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
@@ -104,8 +97,11 @@ const Home = () => {
                   <input
                     className="form-control"
                     type="text"
+                    required
                     name="identity_number"
+                    placeholder="identification number (12 digit) ex: 110101000001"
                     value={identity_number}
+                    pattern="[0-9]{12}"
                     onChange={(e) => setIdentityNumber(e.target.value)}
                   />
                 </div>
@@ -115,9 +111,11 @@ const Home = () => {
                 <div className="col-sm-8">
                   <input
                     className="form-control"
+                    required
                     type="text"
                     name="email"
                     value={email}
+                    placeholder="email"
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
@@ -128,8 +126,11 @@ const Home = () => {
                   <input
                     className="form-control"
                     type="text"
+                    required
                     name="date_of_birth"
+                    placeholder="date of birth ex: 2000-01-01"
                     value={date_of_birth}
+                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                     onChange={(e) => setDateOfBirth(e.target.value)}
                   />
                 </div>
@@ -196,69 +197,6 @@ const Home = () => {
                       <Modal.Footer>  
                         <Button variant="primary" onClick={modalClose}>Close</Button>  
                       </Modal.Footer>  
-                    </Modal> 
-
-                    <button style={{marginLeft: "10px"}} className="btn btn-warning" onClick={modalUpdate}>Update</button>
-                    <Modal show={show1} onHide={modalUpdate}>  
-                      <Modal.Header>  
-                        <Modal.Title>Update Data</Modal.Title>  
-                      </Modal.Header>  
-                      <Modal.Body> 
-                        <form onSubmit={handleSubmit}>
-                          <div className="mb-3 row">
-                            <label className="col-sm-4 col-form-label">Name</label>
-                            <div className="col-sm-8">
-                              <input
-                                className="form-control" 
-                                type="text"
-                                name="name"
-                                value={data.name}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div> 
-                          <div className="mb-3 row">
-                            <label className="col-sm-4 col-form-label">Identity Number</label>
-                            <div className="col-sm-8">
-                              <input
-                                className="form-control"
-                                type="text"
-                                name="identity_number"
-                                value={data.identification_number}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div> 
-                          <div className="mb-3 row">
-                            <label className="col-sm-4 col-form-label">Email</label>
-                            <div className="col-sm-8">
-                              <input
-                                className="form-control"
-                                type="text"
-                                name="email"
-                                value={data.email}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
-                          <div className="mb-3 row">
-                            <label className="col-sm-4 col-form-label">Date of Birth</label>
-                            <div className="col-sm-8">
-                              <input
-                                className="form-control"
-                                type="text"
-                                name="date_of_birth"
-                                value={data.date_of_birth}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </div>
-                          <Modal.Footer>
-                            <button type="submit" className="btn btn-primary">Update</button>
-                            <Button variant="danger" onClick={modalClose1}>Close</Button>  
-                          </Modal.Footer> 
-                        </form>
-                      </Modal.Body>  
                     </Modal> 
 
                     <button style={{marginLeft: "10px"}} className="btn btn-danger" onClick={modalDelete}>Delete</button>
