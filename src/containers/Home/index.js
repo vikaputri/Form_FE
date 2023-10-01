@@ -27,7 +27,7 @@ const Home = () => {
     e.preventDefault()
     const post = { name: name, identification_number:identity_number, email: email, date_of_birth:date_of_birth }
     try {
-      await axios.post('http://127.0.0.1:8000/data', post)
+      await axios.post(`${process.env.BACKEND_URL}/data`, post)
       setShow3(false)
       window.location.reload(false);
     } catch (e) {
