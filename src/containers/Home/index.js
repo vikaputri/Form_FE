@@ -1,6 +1,8 @@
 import React, { useState, useEffect} from "react";
 import axios from 'axios';
-import {Modal, Button} from 'react-bootstrap'; 
+import {Modal, Button} from 'react-bootstrap';
+import validator from 'validator'; 
+import Swal from 'sweetalert2';
 
 const Home = () => {
   const [show, setShow] = useState(false);   
@@ -17,26 +19,102 @@ const Home = () => {
   
   const [datas, setData] = useState([]);
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState({
+    name: '', 
+    identification_number: '', 
+    email: '', 
+    date_of_birth: ''
+  });
 
-  const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [identity_number, setIdentityNumber] = useState('');
-  const [date_of_birth, setDateOfBirth] = useState('');
+  const [nameError, setNameError] = useState({ message: '', status: false });
+	const [identificationNumberError, setIdentificationNumberError] = useState({ message: '', status: false });
+  const [emailError, setEmailError] = useState({ message: '', status: false });
+  const [dateOfBirthError, setDateOfBirthError] = useState({ message: '', status: false });
+
+  const validatorIdentificationNumber = new RegExp("[0-9]{12}");
+  const validatorDateOfBirth = new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+  const validationName = new RegExp("[A-Za-z]$");
+
+  const handleChange = (e, type) => {
+    if (type === 'name') {
+      if (e.target.value === '') {
+        setNameError({ message: 'Name Cannot be Empty', status: false });
+      } else {
+        if (validationName.test(e.target.value)) {
+          setNameError({ message: 'Name is Correct', status: true });
+        } else {
+          setNameError({ message: 'Name is Wrong', status: false });
+        }
+      }
+      setData2({ ...data2, name: e.target.value });
+    } else if (type === 'identification_number') {
+      if (e.target.value === '') {
+        setIdentificationNumberError({ message: 'Identification Number Cannot be Empty', status: false });
+      } else if (e.target.value.length < 12){
+        setIdentificationNumberError({ message: 'Identification Number Must be Complete', status: false });
+      } else{
+        if (validatorIdentificationNumber.test(e.target.value)) {
+          setIdentificationNumberError({ message: 'Identification Number is Correct', status: true });
+        } else {
+          setIdentificationNumberError({ message: 'Identification Number does not Match the Format', status: false });
+        }
+      }
+      setData2({ ...data2, identification_number: e.target.value });
+    } else if (type === 'email') {
+      if (e.target.value === '') {
+        setEmailError({ message: 'Email Cannot be Empty', status: false });
+      } else{
+        if (validator.isEmail(e.target.value)) {
+          setEmailError({ message: 'Email is Correct', status: true });
+        } else {
+          setEmailError({ message: 'Email is does not Match the Format', status: false });
+        }
+      }
+      setData2({ ...data2, email: e.target.value });
+    } else if (type === 'date_of_birth') {
+      if (e.target.value === '') {
+        setDateOfBirthError({ message: 'Date Of Birth Cannot be Empty', status: false });
+      } else if (e.target.value.length < 10){
+        setDateOfBirthError({ message: 'Date Of Birth Must be Complete', status: false });
+      } else{
+        if (validatorDateOfBirth.test(e.target.value)) {
+          setDateOfBirthError({ message: 'Date Of Birth is Correct', status: true });
+        } else {
+          setDateOfBirthError({ message: 'Date Of Birth does not Match the Format', status: false });
+        }
+      }
+      setData2({ ...data2, date_of_birth: e.target.value });
+    }
+  };
   
   const onSubmit = async (e) => {
     e.preventDefault()
-    const post = { name: name, identification_number:identity_number, email: email, date_of_birth:date_of_birth }
     try {
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL1}/data`, post)
-      setShow3(false)
-      window.location.reload(false);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/data`, data2)
+      .then((response) => {
+        setShow3(false)
+        window.location.reload(false);
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: 'Failed to Save Data!',
+          text: 'Name, email, or identification number already exists',
+          icon: 'error',
+          confirmButtonText: 'Create Form Again',
+        });
+      });
     } catch (e) {
-      alert('Gagal Menyimpan Data. Name, email, atau identification number sudah ada')
+      Swal.fire({
+        title: 'Failed to Save Data!',
+        text: 'Network Error!',
+        icon: 'error',
+        confirmButtonText: 'Create Form Again',
+      });
     }
   }
 
   const onDelete = (id) => {
-    axios.delete(`${process.env.REACT_APP_BACKEND_URL1}/data/${id}`).then(()=> {
+    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/data/${id}`).then(()=> {
       setShow2(false)
       window.location.reload(false);
     })
@@ -44,7 +122,7 @@ const Home = () => {
 
   const onView = (id) => {
     setShow(true)
-    axios.get(`${process.env.REACT_APP_BACKEND_URL1}/data/${id}`).then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/data/${id}`).then((res) => {
       setData1(res.data);
     });
   }
@@ -53,7 +131,7 @@ const Home = () => {
     const getApi = async () => {
       try {
         await axios
-        .get(`${process.env.REACT_APP_BACKEND_URL1}/data`)
+        .get(`${process.env.REACT_APP_BACKEND_URL}/data`)
           .then((res) => {
             setData(res.data);
           });
@@ -84,11 +162,13 @@ const Home = () => {
                     className="form-control" 
                     type="text"
                     name="name"
-                    required
-                    value={name}
+                    value={data2.name}
                     placeholder="Name"
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => handleChange(e, 'name')}
                   />
+                  {nameError.status ? 
+                    null : <p className="mb-0 text-sm text-danger">{nameError.message}</p>
+                  }
                 </div>
               </div> 
               <div className="mb-3 row">
@@ -97,13 +177,14 @@ const Home = () => {
                   <input
                     className="form-control"
                     type="text"
-                    required
-                    name="identity_number"
+                    name="identification_number"
                     placeholder="identification number (12 digit) ex: 110101000001"
-                    value={identity_number}
-                    pattern="[0-9]{12}"
-                    onChange={(e) => setIdentityNumber(e.target.value)}
+                    value={data2.identification_number}
+                    onChange={(e) => handleChange(e, 'identification_number')}
                   />
+                  {identificationNumberError.status ? 
+                    null : <p className="mb-0 text-sm text-danger">{identificationNumberError.message}</p>
+                  }
                 </div>
               </div> 
               <div className="mb-3 row">
@@ -111,13 +192,15 @@ const Home = () => {
                 <div className="col-sm-8">
                   <input
                     className="form-control"
-                    required
                     type="text"
                     name="email"
-                    value={email}
+                    value={data2.email}
                     placeholder="email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => handleChange(e, 'email')}
                   />
+                  {emailError.status ? 
+                    null : <p className="mb-0 text-sm text-danger">{emailError.message}</p>
+                  }
                 </div>
               </div>
               <div className="mb-3 row">
@@ -126,13 +209,14 @@ const Home = () => {
                   <input
                     className="form-control"
                     type="text"
-                    required
                     name="date_of_birth"
                     placeholder="date of birth ex: 2000-01-01"
-                    value={date_of_birth}
-                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    value={data2.date_of_birth}
+                    onChange={(e) => handleChange(e, 'date_of_birth')}
                   />
+                  {dateOfBirthError.status ? 
+                    null : <p className="mb-0 text-sm text-danger">{dateOfBirthError.message}</p>
+                  }
                 </div>
               </div>
               <Modal.Footer>
