@@ -27,7 +27,7 @@ const Home = () => {
     e.preventDefault()
     const post = { name: name, identification_number:identity_number, email: email, date_of_birth:date_of_birth }
     try {
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/data`, post)
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL1}/data`, post)
       setShow3(false)
       window.location.reload(false);
     } catch (e) {
@@ -36,7 +36,7 @@ const Home = () => {
   }
 
   const onDelete = (id) => {
-    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/data/${id}`).then(()=> {
+    axios.delete(`${process.env.REACT_APP_BACKEND_URL1}/data/${id}`).then(()=> {
       setShow2(false)
       window.location.reload(false);
     })
@@ -44,7 +44,7 @@ const Home = () => {
 
   const onView = (id) => {
     setShow(true)
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/data/${id}`).then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL1}/data/${id}`).then((res) => {
       setData1(res.data);
     });
   }
@@ -53,7 +53,7 @@ const Home = () => {
     const getApi = async () => {
       try {
         await axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/data`)
+        .get(`${process.env.REACT_APP_BACKEND_URL1}/data`)
           .then((res) => {
             setData(res.data);
           });
