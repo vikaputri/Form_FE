@@ -32,7 +32,7 @@ const Home = () => {
   const [dateOfBirthError, setDateOfBirthError] = useState({ message: '', status: false });
 
   const validatorIdentificationNumber = new RegExp("[0-9]{12}");
-  const validatorDateOfBirth = new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+  //const validatorDateOfBirth = new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{2}");
   const validationName = new RegExp("[A-Za-z]$");
 
   const handleChange = (e, type) => {
@@ -52,7 +52,9 @@ const Home = () => {
         setIdentificationNumberError({ message: 'Identification Number Cannot be Empty', status: false });
       } else if (e.target.value.length < 12){
         setIdentificationNumberError({ message: 'Identification Number Must be Complete', status: false });
-      } else{
+      } else if (e.target.value.length > 12){
+        setIdentificationNumberError({ message: 'Identification Number does not Match the Format', status: false });
+      } else {
         if (validatorIdentificationNumber.test(e.target.value)) {
           setIdentificationNumberError({ message: 'Identification Number is Correct', status: true });
         } else {
@@ -72,16 +74,21 @@ const Home = () => {
       }
       setData2({ ...data2, email: e.target.value });
     } else if (type === 'date_of_birth') {
+      ///if (e.target.value === '') {
+      //  setDateOfBirthError({ message: 'Date Of Birth Cannot be Empty', status: false });
+      //} else if (e.target.value.length < 10){
+      //  setDateOfBirthError({ message: 'Date Of Birth Must be Complete', status: false });
+      //} else{
+      //  if (validatorDateOfBirth.test(e.target.value)) {
+      //    setDateOfBirthError({ message: 'Date Of Birth is Correct', status: true });
+      //  } else {
+      //    setDateOfBirthError({ message: 'Date Of Birth does not Match the Format', status: false });
+      //  }
+      //}
       if (e.target.value === '') {
         setDateOfBirthError({ message: 'Date Of Birth Cannot be Empty', status: false });
-      } else if (e.target.value.length < 10){
-        setDateOfBirthError({ message: 'Date Of Birth Must be Complete', status: false });
-      } else{
-        if (validatorDateOfBirth.test(e.target.value)) {
-          setDateOfBirthError({ message: 'Date Of Birth is Correct', status: true });
-        } else {
-          setDateOfBirthError({ message: 'Date Of Birth does not Match the Format', status: false });
-        }
+      } else {
+        setDateOfBirthError({ message: 'Date Of Birth is Correct', status: true });
       }
       setData2({ ...data2, date_of_birth: e.target.value });
     }
@@ -208,10 +215,10 @@ const Home = () => {
                 <div className="col-sm-8">
                   <input
                     className="form-control"
-                    type="text"
+                    type="date"
                     name="date_of_birth"
                     placeholder="date of birth ex: 2000-01-01"
-                    value={data2.date_of_birth}
+                    value={(data2.date_of_birth)}
                     onChange={(e) => handleChange(e, 'date_of_birth')}
                   />
                   {dateOfBirthError.status ? 
